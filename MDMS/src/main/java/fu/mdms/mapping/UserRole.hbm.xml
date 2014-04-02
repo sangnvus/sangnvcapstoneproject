@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 15, 2014 4:11:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="fu.mdms.model.UserRole" table="userroles" lazy="false">
+        <id name="roleID" type="int">
+            <column name="RoleID" />
+            <generator class="assigned" />
+        </id>
+        <property name="roleName" type="java.lang.String">
+            <column name="RoleName" />
+        </property>
+        <set name="user" table="users" inverse="false" lazy="true">
+            <key>
+                <column name="RoleID" />
+            </key>
+            <one-to-many class="fu.mdms.model.User" />
+        </set>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 15, 2014 4:11:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="fu.mdms.model.Order" table="orders" lazy="false">
+        <id name="orderID" type="int">
+            <column name="OrderID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="user" class="fu.mdms.model.User" fetch="join">
+            <column name="UserID" />
+        </many-to-one>
+        <many-to-one name="dealer" class="fu.mdms.model.Dealer" fetch="join">
+            <column name="DealerID" />
+        </many-to-one>
+        <set name="orderDetail" table="orderdetails" inverse="false" lazy="true">
+            <key>
+                <column name="OrderID" />
+            </key>
+            <one-to-many class="fu.mdms.model.OrderDetail" />
+        </set>
+        <set name="exportBill" table="exportbills" inverse="false" lazy="true">
+            <key>
+                <column name="OrderID" />
+            </key>
+            <one-to-many class="fu.mdms.model.ExportBill" />
+        </set>
+        <property name="orderDate" type="java.util.Date">
+            <column name="OrderDate" />
+        </property>
+        <property name="requiredDate" type="java.util.Date">
+            <column name="RequiredDate" />
+        </property>
+        <property name="status" type="int">
+            <column name="Status" />
+        </property>
+    </class>
+</hibernate-mapping>

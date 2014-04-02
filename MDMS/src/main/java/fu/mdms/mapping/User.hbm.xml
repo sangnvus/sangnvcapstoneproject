@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 15, 2014 4:11:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="fu.mdms.model.User" table="users" lazy="false">
+		<id name="userID" type="int">
+			<column name="UserID" />
+			<generator class="assigned" />
+		</id>
+		<many-to-one name="district" class="fu.mdms.model.District"
+			fetch="join">
+			<column name="DistrictID" />
+		</many-to-one>
+		<set name="dealer" table="dealers" inverse="false" lazy="true">
+			<key>
+				<column name="UserID" />
+			</key>
+			<one-to-many class="fu.mdms.model.Dealer" />
+		</set>
+		<many-to-one name="userRole" class="fu.mdms.model.UserRole"
+			fetch="join">
+			<column name="RoleID" />
+		</many-to-one>
+		<set name="order" table="orders" inverse="false" lazy="true">
+			<key>
+				<column name="UserID" />
+			</key>
+			<one-to-many class="fu.mdms.model.Order" />
+		</set>
+		<property name="userName" type="java.lang.String">
+			<column name="UserName" />
+		</property>
+		<property name="password" type="java.lang.String">
+			<column name="Password" />
+		</property>
+		<property name="fullName" type="java.lang.String">
+			<column name="FullName" />
+		</property>
+		<property name="phone" type="java.lang.String">
+			<column name="Phone" />
+		</property>
+		<property name="email" type="java.lang.String">
+			<column name="Email" />
+		</property>
+		<property name="address" type="java.lang.String">
+			<column name="Address" />
+		</property>
+		<property name="dateOfBirth" type="java.util.Date">
+			<column name="DateOfBirth" />
+		</property>
+		<property name="deleted" type="boolean">
+			<column name="Deleted" />
+		</property>
+	</class>
+</hibernate-mapping>
