@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 15, 2014 4:11:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="fu.mdms.model.Supplier" table="suppliers" lazy="false">
+        <id name="supplierID" type="int">
+            <column name="SupplierID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="district" class="fu.mdms.model.District" fetch="join">
+            <column name="DistrictID" />
+        </many-to-one>
+        <set name="product" table="Products" inverse="false" lazy="true">
+            <key>
+                <column name="SupplierID" />
+            </key>
+            <one-to-many class="fu.mdms.model.Product" />
+        </set>
+        <set name="importBill" table="importbills" inverse="false" lazy="true">
+            <key>
+                <column name="SupplierID" />
+            </key>
+            <one-to-many class="fu.mdms.model.ImportBill" />
+        </set>
+        <property name="supplierName" type="java.lang.String">
+            <column name="SupplierName" />
+        </property>
+        <property name="tax" type="java.lang.String">
+            <column name="Tax" />
+        </property>
+        <property name="businessLicenseCode" type="java.lang.String">
+            <column name="BusinessLicenseCode" />
+        </property>
+        <property name="phone" type="java.lang.String">
+            <column name="Phone" />
+        </property>
+        <property name="fax" type="java.lang.String">
+            <column name="Fax" />
+        </property>
+        <property name="email" type="java.lang.String">
+            <column name="Email" />
+        </property>
+        <property name="address" type="java.lang.String">
+            <column name="Address" />
+        </property>
+        <property name="description" type="java.lang.String">
+            <column name="Description" />
+        </property>
+        		<property name="deleted" type="boolean">
+			<column name="Deleted" />
+		</property>
+    </class>
+</hibernate-mapping>

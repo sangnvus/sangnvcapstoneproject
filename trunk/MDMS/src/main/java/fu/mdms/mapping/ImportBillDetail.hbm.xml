@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 15, 2014 4:11:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="fu.mdms.model.ImportBillDetail" table="importbilldetails" lazy="false">
+        <id name="importBillDetailID" type="int">
+            <column name="ImportBillDetailID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="importBill" class="fu.mdms.model.ImportBill" fetch="join">
+            <column name="ImportBillID" />
+        </many-to-one>
+        <many-to-one name="product" class="fu.mdms.model.Product" fetch="join">
+            <column name="ProductID" />
+        </many-to-one>
+        <property name="importPrice" type="java.math.BigDecimal">
+            <column name="ImportPrice" />
+        </property>
+        <property name="quantity" type="int">
+            <column name="Quantity" />
+        </property>
+    </class>
+</hibernate-mapping>

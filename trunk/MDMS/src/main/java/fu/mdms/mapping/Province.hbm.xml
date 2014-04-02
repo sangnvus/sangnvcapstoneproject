@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 15, 2014 4:11:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="fu.mdms.model.Province" table="provinces" lazy="false">
+        <id name="provinceId" type="java.lang.String">
+            <column name="ProvinceId" />
+            <generator class="assigned" />
+        </id>
+        <set name="district" table="districts" inverse="false" lazy="true">
+            <key>
+                <column name="ProvinceId" />
+            </key>
+            <one-to-many class="fu.mdms.model.District" />
+        </set>
+        <property name="provinceName" type="java.lang.String">
+            <column name="ProvinceName" />
+        </property>
+        <property name="provinceType" type="java.lang.String">
+            <column name="ProvinceType" />
+        </property>
+    </class>
+</hibernate-mapping>

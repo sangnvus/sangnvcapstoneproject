@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 15, 2014 4:11:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+    <class name="fu.mdms.model.PriceHistory" table="pricehistory" lazy="false">
+        <id name="priceHistoryID" type="int">
+            <column name="PriceHistoryID" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="product" class="fu.mdms.model.Product" fetch="join">
+            <column name="ProductID" />
+        </many-to-one>
+        <property name="date" type="java.util.Date">
+            <column name="Date" />
+        </property>
+        <property name="importPrice" type="java.math.BigDecimal">
+            <column name="ImportPrice" />
+        </property>
+    </class>
+</hibernate-mapping>

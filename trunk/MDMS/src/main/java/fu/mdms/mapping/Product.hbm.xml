@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated Mar 15, 2014 4:11:45 PM by Hibernate Tools 3.4.0.CR1 -->
+<hibernate-mapping>
+	<class name="fu.mdms.model.Product" table="Products" lazy="false">
+		<id name="productID" type="int">
+			<column name="ProductID" />
+			<generator class="assigned" />
+		</id>
+		<many-to-one name="producer" class="fu.mdms.model.Producer"
+			fetch="join">
+			<column name="ProducerID" />
+		</many-to-one>
+		<many-to-one name="category" class="fu.mdms.model.Category"
+			fetch="join">
+			<column name="CategoryID" />
+		</many-to-one>
+		<many-to-one name="supplier" class="fu.mdms.model.Supplier"
+			fetch="join">
+			<column name="SupplierID" />
+		</many-to-one>
+		<set name="priceHistory" table="pricehistory" inverse="false"
+			lazy="true">
+			<key>
+				<column name="ProductID" />
+			</key>
+			<one-to-many class="fu.mdms.model.PriceHistory" />
+		</set>
+		<set name="orderDetail" table="orderdetails" inverse="false" lazy="true">
+			<key>
+				<column name="ProductID" />
+			</key>
+			<one-to-many class="fu.mdms.model.OrderDetail" />
+		</set>
+		<set name="exportBillDetail" table="exportbilldetails" inverse="false"
+			lazy="true">
+			<key>
+				<column name="ProductID" />
+			</key>
+			<one-to-many class="fu.mdms.model.ExportBillDetail" />
+		</set>
+		<set name="importBillDetail" table="importbilldetails" inverse="false"
+			lazy="true">
+			<key>
+				<column name="ProductID" />
+			</key>
+			<one-to-many class="fu.mdms.model.ImportBillDetail" />
+		</set>
+		<property name="productCode" type="java.lang.String">
+			<column name="ProductCode" />
+		</property>
+		<property name="productName" type="java.lang.String">
+			<column name="ProductName" />
+		</property>
+		<property name="packagedType" type="java.lang.String">
+			<column name="PackagedType" />
+		</property>
+		<property name="unitsInStock" type="int">
+			<column name="UnitsInStock" />
+		</property>
+		<property name="unitsOnOrders" type="int">
+			<column name="UnitsOnOrders" />
+		</property>
+		<property name="importPrice" type="java.math.BigDecimal">
+			<column name="ImportPrice" />
+		</property>
+		<property name="exportPrice" type="java.math.BigDecimal">
+			<column name="ExportPrice" />
+		</property>
+		<property name="description" type="java.lang.String">
+			<column name="Description" />
+		</property>
+		<property name="deleted" type="boolean">
+			<column name="Deleted" />
+		</property>
+	</class>
+</hibernate-mapping>
