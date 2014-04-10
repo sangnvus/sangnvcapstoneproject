@@ -6,7 +6,7 @@ import fu.mdms.model.User;
 import fu.mdms.model.UserRole;
 
 public interface UserDao {
-	public void addUser(User user);
+	public void create(User user);
 	public void editUser(User user);
 	public void deleteUser(int userID);
 	public User getUser(int userID);

@@ -12,7 +12,7 @@
 			fetch="join">
 			<column name="DistrictID" />
 		</many-to-one>
-		<set name="dealer" table="dealers" inverse="false" lazy="true">
+		<set name="dealer" table="dealers" inverse="false" lazy="false">
 			<key>
 				<column name="UserID" />
 			</key>
@@ -22,7 +22,7 @@
 			fetch="join">
 			<column name="RoleID" />
 		</many-to-one>
-		<set name="order" table="orders" inverse="false" lazy="true">
+		<set name="order" table="orders" inverse="false" lazy="false">
 			<key>
 				<column name="UserID" />
 			</key>
@@ -36,6 +36,9 @@
 		</property>
 		<property name="fullName" type="java.lang.String">
 			<column name="FullName" />
+		</property>
+		<property name="gender" type="boolean">
+			<column name="Gender" />
 		</property>
 		<property name="phone" type="java.lang.String">
 			<column name="Phone" />

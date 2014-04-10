@@ -14,7 +14,7 @@
         <many-to-one name="order" class="fu.mdms.model.Order" fetch="join">
             <column name="OrderID" />
         </many-to-one>
-        <set name="exportBillDetail" table="exportbilldetails" inverse="false" lazy="true">
+        <set name="exportBillDetail" table="exportbilldetails" inverse="false" lazy="false">
             <key>
                 <column name="ExportBillID" />
             </key>

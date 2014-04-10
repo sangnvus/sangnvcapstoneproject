@@ -1,9 +1,0 @@
-eclipse.preferences.version=1
-encoding//src/main/java/fu/mdms/model/Order.java=UTF-8
-encoding//src/main/webapp/WEB-INF/views/admin_createUser.jsp=UTF-8
-encoding//src/main/webapp/WEB-INF/views/createDealer.jsp=UTF-8
-encoding//src/main/webapp/WEB-INF/views/createOrder.jsp=UTF-8
-encoding//src/main/webapp/WEB-INF/views/home.jsp=UTF-8
-encoding//src/main/webapp/WEB-INF/views/salesman.jsp=UTF-8
-encoding//src/main/webapp/WEB-INF/views/store_orderList.jsp=UTF-8
-encoding//src/main/webapp/WEB-INF/views/store_orderView.jsp=UTF-8

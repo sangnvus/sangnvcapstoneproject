@@ -89,9 +89,9 @@ h3 {
 
 #nav {
 	position: absolute;
-	left: 880px;
+	right: 0px;
 	top: 40px;
-	width: 200px;
+	width: 250px;
 }
 
 #nav, #nav a {
@@ -321,13 +321,17 @@ table {
 	padding-top: 5px;
 	padding-left: 20px;
 }
+#normalTable {
+	table-layout: fixed;
+}
 #normalTable td a:link{
 	text-decoration: none;
 	display: block;
 	margin: 0px;
-	height: 28px;
+	height: 20px;
 	width: 70px;
-	padding-left: 10px;
+	padding-left: 0px;
+	padding-top: 5px;
 }
 #font
 {
@@ -354,8 +358,26 @@ table {
 #ip{
 	width: 400px; 
 }
-#inputE{
+.inputE{
 	width: 250px; 
+}
+.inputA{
+	width: 70px;
+	
+}
+.inputB{
+	width: 140px;
+	text-align: right; 
+	
+}
+.inputBB{
+	width: 140px;
+	
+	
+}
+.inputC{
+	width: 200px;
+	
 }
 .right {
  text-align: right; 

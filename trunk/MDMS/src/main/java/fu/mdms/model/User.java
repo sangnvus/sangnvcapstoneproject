@@ -1,5 +1,6 @@
 package fu.mdms.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
@@ -10,6 +11,7 @@ public class User {
 	private UserRole userRole;
 	private Set<Order> order;
 	private String userName;
+	private boolean gender;
 	private String password;
 	private String fullName;
 	private String phone;
@@ -23,7 +25,7 @@ public class User {
 	}
 
 	public User(District district, Set<Dealer> dealer, UserRole userRole,
-			Set<Order> order, String userName, String password,
+			Set<Order> order, String userName,Boolean gender, String password,
 			String fullName, String phone, String email, String address,
 			Date dateOfBirth) {
 		super();
@@ -34,6 +36,7 @@ public class User {
 		this.userName = userName;
 		this.password = password;
 		this.fullName = fullName;
+		this.gender=gender;
 		this.phone = phone;
 		this.email = email;
 		this.address = address;
@@ -143,5 +146,18 @@ public class User {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+	public String getDisplayDateOfBirth(){
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		System.out.println(format.format(dateOfBirth));
+		return format.format(dateOfBirth);
+	}
 
+	public boolean isGender() {
+		return gender;
+	}
+
+	public void setGender(boolean gender) {
+		this.gender = gender;
+	}
+	
 }

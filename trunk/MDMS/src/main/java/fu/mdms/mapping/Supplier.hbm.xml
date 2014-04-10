@@ -11,13 +11,13 @@
         <many-to-one name="district" class="fu.mdms.model.District" fetch="join">
             <column name="DistrictID" />
         </many-to-one>
-        <set name="product" table="Products" inverse="false" lazy="true">
+        <set name="product" table="Products" inverse="false" lazy="false">
             <key>
                 <column name="SupplierID" />
             </key>
             <one-to-many class="fu.mdms.model.Product" />
         </set>
-        <set name="importBill" table="importbills" inverse="false" lazy="true">
+        <set name="importBill" table="importbills" inverse="false" lazy="false">
             <key>
                 <column name="SupplierID" />
             </key>

@@ -31,11 +31,18 @@
 	<br>
 	<a href="listImportBill">List ImportBill</a>
 	<br>
-	<a href="testListDealer">Test List Dealer</a> <br>
-	<a href="createDealer">Thêm Đại lý</a>
-	<br/>
-	<a href="store_listOrder">Danh sách đơn hàng(Dealer)</a>
-	<br><a href="testUser">test user</a>
+	<a href="testListDealer">Test List Dealer</a>
 	<br>
+	<a href="createDealer">Thêm Đại lý</a>
+	<br />
+	<a href="store_listOrder">Danh sách đơn hàng(Dealer)</a>
+	<br>
+	<a href="testUser">test user</a>
+	<br>
+	<a href="store_listProduct">Store List Product</a>
+	<br>
+	<a href="store_listSupplier">Store List Supplier</a>
+	<br>
+
 </body>
 </html>

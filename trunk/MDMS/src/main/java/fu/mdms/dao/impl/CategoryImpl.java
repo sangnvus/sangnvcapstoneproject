@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 
 import fu.mdms.dao.CategoryDao;
 import fu.mdms.model.Category;
+import fu.mdms.model.UserRole;
 import fu.mdms.util.HibernateUtil;
 
 public class CategoryImpl implements CategoryDao {
@@ -21,7 +22,13 @@ public class CategoryImpl implements CategoryDao {
 	}
 
 	public Category getCategory(int CategoryID) {
-		return null;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		Category category = (Category) session.get(Category.class, CategoryID);
+		session.getTransaction().commit();
+		session.close();
+		return category;
 	}
 
 	@SuppressWarnings("unchecked")

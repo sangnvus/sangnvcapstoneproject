@@ -1,5 +1,8 @@
 package fu.mdms.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
@@ -24,6 +27,25 @@ public class ExportBill {
 		this.createDate = createDate;
 		this.exportDate = exportDate;
 		this.status = status;
+	}
+	
+	public ExportBill(Dealer dealer, Order order, String createDate,
+			String exportDate) {
+		super();
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date createDate1=null;
+		Date exportDate1=null;
+		try {
+			createDate1 = (Date)formatter.parse(createDate);
+			exportDate1 = (Date)formatter.parse(exportDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		this.dealer = dealer;
+		this.order = order;
+		this.createDate = createDate1;
+		this.exportDate = exportDate1;
 	}
 	public int getExportBillID() {
 		return exportBillID;

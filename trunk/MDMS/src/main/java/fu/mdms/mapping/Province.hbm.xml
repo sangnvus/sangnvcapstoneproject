@@ -4,13 +4,13 @@
 <!-- Generated Mar 15, 2014 4:11:45 PM by Hibernate Tools 3.4.0.CR1 -->
 <hibernate-mapping>
     <class name="fu.mdms.model.Province" table="provinces" lazy="false">
-        <id name="provinceId" type="java.lang.String">
-            <column name="ProvinceId" />
+        <id name="provinceID" type="java.lang.String">
+            <column name="ProvinceID" />
             <generator class="assigned" />
         </id>
-        <set name="district" table="districts" inverse="false" lazy="true">
+        <set name="district" table="districts" inverse="false" lazy="false">
             <key>
-                <column name="ProvinceId" />
+                <column name="ProvinceID" />
             </key>
             <one-to-many class="fu.mdms.model.District" />
         </set>

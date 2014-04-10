@@ -3,26 +3,26 @@ package fu.mdms.model;
 import java.util.Set;
 
 public class Province {
-	private String provinceId;
+	private String provinceID;
 	private Set<District> district;
 	private String provinceName;
 	private String provinceType;
 	public Province() {
 		super();
 	}
-	public Province(String provinceId, Set<District> district,
+	public Province(String provinceID, Set<District> district,
 			String provinceName, String provinceType) {
 		super();
-		this.provinceId = provinceId;
+		this.provinceID = provinceID;
 		this.district = district;
 		this.provinceName = provinceName;
 		this.provinceType = provinceType;
 	}
-	public String getProvinceId() {
-		return provinceId;
+	public String getProvinceID() {
+		return provinceID;
 	}
-	public void setProvinceId(String provinceId) {
-		this.provinceId = provinceId;
+	public void setProvinceID(String provinceID) {
+		this.provinceID = provinceID;
 	}
 	public Set<District> getDistrict() {
 		return district;

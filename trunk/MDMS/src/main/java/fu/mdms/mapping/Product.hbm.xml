@@ -21,27 +21,27 @@
 			<column name="SupplierID" />
 		</many-to-one>
 		<set name="priceHistory" table="pricehistory" inverse="false"
-			lazy="true">
+			lazy="false">
 			<key>
 				<column name="ProductID" />
 			</key>
 			<one-to-many class="fu.mdms.model.PriceHistory" />
 		</set>
-		<set name="orderDetail" table="orderdetails" inverse="false" lazy="true">
+		<set name="orderDetail" table="orderdetails" inverse="false" lazy="false">
 			<key>
 				<column name="ProductID" />
 			</key>
 			<one-to-many class="fu.mdms.model.OrderDetail" />
 		</set>
 		<set name="exportBillDetail" table="exportbilldetails" inverse="false"
-			lazy="true">
+			lazy="false">
 			<key>
 				<column name="ProductID" />
 			</key>
 			<one-to-many class="fu.mdms.model.ExportBillDetail" />
 		</set>
 		<set name="importBillDetail" table="importbilldetails" inverse="false"
-			lazy="true">
+			lazy="false">
 			<key>
 				<column name="ProductID" />
 			</key>
