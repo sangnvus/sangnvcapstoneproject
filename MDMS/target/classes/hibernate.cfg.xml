@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+	<session-factory>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/mdms
+		</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password">12345678</property>
+		<property name="hibernate.connection.pool_size">10</property>
+		<property name="show_sql">true</property>
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hibernate.current_session_context_class">thread</property>
+		<mapping resource="fu/mdms/mapping/Category.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/Dealer.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/District.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/ExportBill.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/ExportBillDetail.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/ImportBill.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/ImportBillDetail.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/Order.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/OrderDetail.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/PriceHistory.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/Producer.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/Product.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/Province.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/Supplier.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/User.hbm.xml" />
+		<mapping resource="fu/mdms/mapping/UserRole.hbm.xml" />
+	</session-factory>
+
+</hibernate-configuration>
