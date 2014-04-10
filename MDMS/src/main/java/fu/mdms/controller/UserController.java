@@ -1,6 +1,7 @@
 package fu.mdms.controller;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -19,10 +20,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import fu.mdms.dao.AddressDao;
+import fu.mdms.dao.DealerDao;
+import fu.mdms.dao.OrderDao;
 import fu.mdms.dao.UserDao;
 import fu.mdms.dao.impl.AddressDaoImpl;
+import fu.mdms.dao.impl.DealerDaoImpl;
+import fu.mdms.dao.impl.OrderDaoImpl;
 import fu.mdms.dao.impl.UserDaoImpl;
+import fu.mdms.model.Dealer;
 import fu.mdms.model.District;
+import fu.mdms.model.Order;
 import fu.mdms.model.Province;
 import fu.mdms.model.User;
 import fu.mdms.model.UserRole;
@@ -30,6 +37,9 @@ import fu.mdms.model.UserRole;
 @Controller
 public class UserController {
 	UserDao userDao = new UserDaoImpl();
+	OrderDao orderDao = new OrderDaoImpl();
+	DealerDao dealerDao = new DealerDaoImpl();
+	AddressDao addressDao = new AddressDaoImpl();
 
 	/*
 	 * private static final Logger logger = LoggerFactory
@@ -47,7 +57,6 @@ public class UserController {
 	public String login(HttpServletRequest request,
 			HttpServletResponse response, Locale locale, Model model,
 			HttpSession session) {
-
 		String userName = request.getParameter("userName");
 		String password = request.getParameter("passWord");
 		User user = userDao.login(userName, password);
@@ -59,15 +68,18 @@ public class UserController {
 			model.addAttribute("userRoleList", userRoleList);
 			model.addAttribute("userList", userList);
 			session.setAttribute("user", user);
-			return "admin_listUser";
+			return "admin/admin_listUser";
 		} else if (user.getUserRole().getRoleID() == 2) {
+			List<Dealer> dealerList = dealerDao.getAllDealer();
+			model.addAttribute("dealerList", dealerList);
 			session.setAttribute("user", user);
-			System.out.println("aaaaaaaaaaaaa");
-			return "salesman";
+			return "sale/sale_listDealer";
 
 		} else if (user.getUserRole().getRoleID() == 3) {
 			session.setAttribute("user", user);
-			return "salesman";
+			List<Order> orderList = orderDao.searchOrder("", "1");
+			model.addAttribute("orderList", orderList);
+			return "store/store_listOrder";
 		} else if (user.getUserID() == 0) {
 			return "fail";
 		}
@@ -79,22 +91,25 @@ public class UserController {
 	public String admin_listUser(HttpServletRequest request,
 			HttpServletResponse response, Locale locale, Model model)
 			throws IOException {
-		// HttpSession session = request.getSession(false);
-		// UserDao userDao = new UserDaoImpl();
-		// User user = (User) session.getAttribute("user");
-		// System.out.println(user.getUserName());
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
 		List<UserRole> userRoleList = userDao.getUserRole();
 		List<User> userList = userDao.getAllUser();
 		model.addAttribute("userList", userList);
 		model.addAttribute("userRoleList", userRoleList);
-		return "admin_listUser";
+		return "admin/admin_listUser";
 	}
 
 	@RequestMapping(value = "/admin_searchUser", method = RequestMethod.POST)
 	public String admin_searchUser(HttpServletRequest request,
 			HttpServletResponse response, Locale locale, Model model) {
-		// UserRole userRole = new UserRole();
-		int userID = Integer.parseInt(request.getParameter("userID").trim());
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
+		int userID = Integer.parseInt(request.getParameter("userID"));
 		int roleName = Integer
 				.parseInt(request.getParameter("roleName").trim());
 		String userName = request.getParameter("userName");
@@ -105,46 +120,62 @@ public class UserController {
 		model.addAttribute("user", user);
 		model.addAttribute("userRoleList", userRoleList);
 		model.addAttribute("userList", userList);
-		return "admin_listUser";
+		return "admin/admin_listUser";
 	}
 
 	@RequestMapping(value = "/admin_createUser", method = RequestMethod.POST)
 	public String admin_createUser(HttpServletRequest request,
 			HttpServletResponse response, Locale locale, Model model) {
-		AddressDao addressDao = new AddressDaoImpl();
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
 		List<UserRole> userRoleList = userDao.getUserRole();
-		int userID = Integer.parseInt(request.getParameter("userID").trim());
 		List<Province> provinceList = addressDao.getAllProvinces();
-
 		// List<District> districtList = addressDao.getDistricts(provinceID);
 		model.addAttribute("provinceList", provinceList);
 		model.addAttribute("userRoleList", userRoleList);
-		User user = userDao.getUser(userID);
-		model.addAttribute("user", user);
-		return "admin_createUser";
+		return "admin/admin_createUser";
 	}
 
+	/**
+	 * 
+	 * @param request
+	 * @param response
+	 * @param locale
+	 * @param model
+	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/changeCity", method = RequestMethod.GET)
 	public String changeCity(HttpServletRequest request,
 			HttpServletResponse response, Locale locale, Model model) {
-		/*
-		 * String provinceID = request.getParameter("provinceID"); AddressDao
-		 * addressDao = new AddressImplDao(); List<District> districtList =
-		 * addressDao.getDistricts(provinceID); JSONObject json = new
-		 * JSONObject(); for (District district : districtList) {
-		 * json.put(district.getDistrictID(), district.getDistrictName()); }
-		 * response.setContentType("application/json"); try {
-		 * response.getWriter().write(json.toString()); } catch (IOException e)
-		 * { e.printStackTrace(); }
-		 */
+		response.setCharacterEncoding("UTF-8");
+		response.setContentType("application/json;charset=UTF-8");
+		String provinceID = request.getParameter("province");
+		List<District> districtList = addressDao.getDistricts(provinceID);
+		JSONObject json = new JSONObject();
+		for (District district : districtList) {
+			json.put(district.getDistrictID(), district.getDistrictName());
+		}
+		response.setContentType("application/json");
+		try {
+			response.getWriter().write(json.toString());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		return null;
 	}
 
-	@RequestMapping(value = "/admin_saveUser", method = RequestMethod.POST)
-	public String admin_saveUser(HttpServletRequest request,
+	@RequestMapping(value = "/admin_saveCreateUser", method = RequestMethod.POST)
+	public String admin_saveCreateUser(HttpServletRequest request,
 			HttpServletResponse response, Locale locale, Model model) {
-		AddressDao addressDao = new AddressDaoImpl();
+		try {
+			request.setCharacterEncoding("utf-8");
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
 		List<Province> provinceList = addressDao.getAllProvinces();
 
 		// List<District> districtList = addressDao.getDistricts(provinceID);
@@ -166,9 +197,13 @@ public class UserController {
 		} catch (ParseException e) { // TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String districtID = "001";
+		String districtID = request.getParameter("district");
 		District district = addressDao.getDistrict(districtID);
 		UserRole userRole = userDao.getUserRoleByID(Integer.parseInt(roleID));
+		boolean gender1 = false;
+		if (gender.equalsIgnoreCase("Nu")) {
+			gender1 = true;
+		}
 		User user = new User();
 		user.setUserRole(userRole);
 		user.setDistrict(district);
@@ -176,94 +211,236 @@ public class UserController {
 		user.setPassword(password);
 		user.setFullName(fullName);
 		user.setPhone(phone);
+		user.setGender(gender1);
 		user.setEmail(email);
 		user.setAddress(address);
 		user.setDateOfBirth(dateOfBirth);
-		userDao.addUser(user);
+		userDao.create(user);
 
 		model.addAttribute("provinceList", provinceList);
 		List<User> userList = userDao.getAllUser();
 		model.addAttribute("userList", userList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 		// model.addAttribute("user", user);
-		return "admin_listUser";
+		return "admin/admin_listUser";
 	}
 
 	@RequestMapping(value = "/admin_editUser", method = RequestMethod.GET)
 	public String admin_editUser(HttpServletRequest request,
 			HttpServletResponse response, Locale locale, Model model) {
-		AddressDao addressDao = new AddressDaoImpl();
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
 		List<UserRole> userRoleList = userDao.getUserRole();
 		int userID = Integer.parseInt(request.getParameter("userID").trim());
 		List<Province> provinceList = addressDao.getAllProvinces();
-		// List<District> districtList = addressDao.getDistricts(provinceID);
-		model.addAttribute("provinceList", provinceList);
-		model.addAttribute("userRoleList", userRoleList);
 		User user = userDao.getUser(userID);
+		List<District> districtList = addressDao.getDistricts(user
+				.getDistrict().getProvince().getProvinceID());
+		model.addAttribute("provinceList", provinceList);
+		model.addAttribute("districtList", districtList);
+		model.addAttribute("userRoleList", userRoleList);
 		model.addAttribute("user", user);
-		return "admin_editUser";
+		return "admin/admin_editUser";
 	}
 
-	@RequestMapping(value = "/testUser", method = RequestMethod.GET)
-	public String test(HttpServletRequest request,
+	@RequestMapping(value = "/admin_saveEditUser", method = RequestMethod.POST)
+	public String admin_saveEditUser(HttpServletRequest request,
 			HttpServletResponse response, Locale locale, Model model) {
-		// UserRole userRole = new UserRole();
-		return "test";
+		try {
+			request.setCharacterEncoding("utf-8");
+		
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
+		int userID = Integer.parseInt(request.getParameter("userID"));
+		String userName = request.getParameter("userName");
+		String fullName = request.getParameter("fullName");
+		String gender = request.getParameter("gender");
+		String address = request.getParameter("address");
+		String phone = request.getParameter("phone");
+		String email = request.getParameter("email");
+		String roleID = request.getParameter("roleID");
+		String dateOfbirth_ = request.getParameter("dateOfBirth");
+		DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		Date dateOfBirth = null;
+
+		try {
+			dateOfBirth = (Date) formatter.parse(dateOfbirth_);
+
+		} catch (ParseException e) { // TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String districtID = request.getParameter("district");
+		District district = addressDao.getDistrict(districtID);
+		UserRole userRole = userDao.getUserRoleByID(Integer.parseInt(roleID));
+		User user = userDao.getUser(userID);
+		user.setUserRole(userRole);
+		user.setDistrict(district);
+		user.setUserName(userName);
+		user.setFullName(fullName);
+		if (gender.equalsIgnoreCase("Nam")) {
+			user.setGender(false);
+		} else {
+			user.setGender(true);
+		}
+		user.setPhone(phone);
+		user.setEmail(email);
+		user.setAddress(address);
+		user.setDateOfBirth(dateOfBirth);
+		userDao.editUser(user);
+
+		List<User> userList = userDao.getAllUser();
+		model.addAttribute("userList", userList);
+		// model.addAttribute("user", user);
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return "admin/admin_listUser";
 	}
-	/*
-	 * @RequestMapping(value = "/edit", method = RequestMethod.GET) public
-	 * String edit(HttpServletRequest request, HttpServletResponse response,
-	 * Locale locale, Model model) { String userID =
-	 * request.getParameter("userID"); User user =
-	 * userDao.getUser(Integer.parseInt(userID)); model.addAttribute("user",
-	 * user); List<UserRole> userRole = userDao.getUserRole();
-	 * model.addAttribute("roleList", userRole); return "edit"; }
-	 * 
-	 * @RequestMapping(value = "/create", method = RequestMethod.GET) public
-	 * String create(Locale locale, Model model) { List<UserRole> userRole =
-	 * userDao.getUserRole(); model.addAttribute("roleList", userRole); return
-	 * "create"; }
-	 * 
-	 * @RequestMapping(value = "/delete", method = RequestMethod.GET) public
-	 * String delete(HttpServletRequest request, HttpServletResponse response,
-	 * Locale locale, Model model) { String userID =
-	 * request.getParameter("userID"); userDao.delete(Integer.parseInt(userID));
-	 * model.addAttribute("userID", userID); return "delete"; }
-	 * 
-	 * @RequestMapping(value = "/createUser", method = RequestMethod.POST)
-	 * public String createUser(HttpServletRequest request, HttpServletResponse
-	 * response, Locale locale, Model model) { String userName =
-	 * request.getParameter("userName"); String fullName =
-	 * request.getParameter("fullName"); String age =
-	 * request.getParameter("age"); String address =
-	 * request.getParameter("address"); String phone =
-	 * request.getParameter("phone"); String email =
-	 * request.getParameter("email"); String roleID =
-	 * request.getParameter("role"); User user = new User(); UserRole userRole =
-	 * userDao.getUserRoleByID(Integer.parseInt(roleID));
-	 * user.setUserName(userName); user.setPassword("12345678");
-	 * user.setFullName(fullName); user.setAge(Integer.parseInt(age));
-	 * user.setAddress(address); user.setPhone(phone); user.setEmail(email);
-	 * user.setUserRole(userRole); userDao.add(user);
-	 * model.addAttribute("userName", userName); return "add"; }
-	 * 
-	 * @RequestMapping(value = "/editUser", method = RequestMethod.POST) public
-	 * String editUser(HttpServletRequest request, HttpServletResponse response,
-	 * Locale locale, Model model) { String userID =
-	 * request.getParameter("userID"); String userName =
-	 * request.getParameter("userName"); String password =
-	 * request.getParameter("password"); String fullName =
-	 * request.getParameter("fullName"); String age =
-	 * request.getParameter("age"); String address =
-	 * request.getParameter("address"); String phone =
-	 * request.getParameter("phone"); String email =
-	 * request.getParameter("email"); String roleID =
-	 * request.getParameter("role"); User user = new User(); UserRole userRole =
-	 * userDao.getUserRoleByID(Integer.parseInt(roleID));
-	 * user.setUserID(Integer.parseInt(userID)); user.setUserName(userName);
-	 * user.setPassword(password); user.setFullName(fullName);
-	 * user.setAge(Integer.parseInt(age)); user.setAddress(address);
-	 * user.setPhone(phone); user.setEmail(email); user.setUserRole(userRole);
-	 * userDao.edit(user); model.addAttribute("userName", userName); return
-	 * "editUser"; }
-	 */
+
+	@RequestMapping(value = "/changeUserInformation", method = RequestMethod.GET)
+	public String changeUserInformation(HttpServletRequest request,
+			HttpServletResponse response, Locale locale, Model model) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
+		int userID = Integer.parseInt(request.getParameter("userID"));
+		List<Province> provinceList = addressDao.getAllProvinces();
+		User user = userDao.getUser(userID);
+		List<District> districtList = addressDao.getDistricts(user
+				.getDistrict().getProvince().getProvinceID());
+		model.addAttribute("provinceList", provinceList);
+		model.addAttribute("districtList", districtList);
+		model.addAttribute("user", user);
+		return "user/userEditInformation";
+	}
+
+	@RequestMapping(value = "/saveChangeUserInformation", method = RequestMethod.POST)
+	public String saveChangeUserInformation(HttpServletRequest request,
+			HttpServletResponse response, Locale locale, Model model) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
+
+		int userID = Integer.parseInt(request.getParameter("userID"));
+		String address = request.getParameter("address");
+		String phone = request.getParameter("phone");
+		String email = request.getParameter("email");
+		String districtID = request.getParameter("district");
+		District district = addressDao.getDistrict(districtID);
+		User user = userDao.getUser(userID);
+		user.setDistrict(district);
+		user.setPhone(phone);
+		user.setEmail(email);
+		user.setAddress(address);
+		userDao.editUser(user);
+		if (user.getUserRole().getRoleID() == 1) {
+			List<User> userList = userDao.getAllUser();
+			List<UserRole> userRoleList = userDao.getUserRole();
+			model.addAttribute("userRoleList", userRoleList);
+			model.addAttribute("userList", userList);
+			return "admin/admin_listUser";
+		} else if (user.getUserRole().getRoleID() == 2) {
+			List<Dealer> dealerList = dealerDao.getAllDealer();
+			model.addAttribute("dealerList", dealerList);
+			return "sale/sale_listDealer";
+
+		} else if (user.getUserRole().getRoleID() == 3) {
+			List<Order> orderList = orderDao.getAllOrder();
+			model.addAttribute("orderList", orderList);
+			return "store/store_listOrder";
+		}
+		// model.addAttribute("user", user);
+		return "home";
+	}
+
+	@RequestMapping(value = "/admin_deleteUser", method = RequestMethod.GET)
+	public String admin_deleteUser(HttpServletRequest request,
+			HttpServletResponse response, Locale locale, Model model) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
+		int userID = Integer.parseInt(request.getParameter("userID"));
+		User user = userDao.getUser(userID);
+		user.setDeleted(true);
+		userDao.editUser(user);
+		List<User> userList = userDao.getAllUser();
+		List<UserRole> userRoleList = userDao.getUserRole();
+		model.addAttribute("userRoleList", userRoleList);
+		model.addAttribute("userList", userList);
+		return "admin/admin_listUser";
+
+	}
+
+	@RequestMapping(value = "/admin_activeUser", method = RequestMethod.GET)
+	public String admin_activeUser(HttpServletRequest request,
+			HttpServletResponse response, Locale locale, Model model) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
+		int userID = Integer.parseInt(request.getParameter("userID"));
+		User user = userDao.getUser(userID);
+		user.setDeleted(false);
+		userDao.editUser(user);
+		List<User> userList = userDao.getAllUser();
+		List<UserRole> userRoleList = userDao.getUserRole();
+		model.addAttribute("userRoleList", userRoleList);
+		model.addAttribute("userList", userList);
+		return "admin/admin_listUser";
+
+	}
+
+	@RequestMapping(value = "/admin_resetPassword", method = RequestMethod.GET)
+	public String admin_resetPassword(HttpServletRequest request,
+			HttpServletResponse response, Locale locale, Model model) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
+		int userID = Integer.parseInt(request.getParameter("userID"));
+		AddressDao addressDao = new AddressDaoImpl();
+		List<UserRole> userRoleList = userDao.getUserRole();
+		List<Province> provinceList = addressDao.getAllProvinces();
+		User user = userDao.getUser(userID);
+		List<District> districtList = addressDao.getDistricts(user
+				.getDistrict().getProvince().getProvinceID());
+		model.addAttribute("provinceList", provinceList);
+		model.addAttribute("districtList", districtList);
+		model.addAttribute("userRoleList", userRoleList);
+		model.addAttribute("user", user);
+		user.setPassword("12345678");
+		userDao.editUser(user);
+		return "admin/admin_editUser";
+
+	}
+	@RequestMapping(value = "/userChangePassword", method = RequestMethod.GET)
+	public String userChangePassword(HttpServletRequest request,
+			HttpServletResponse response, Locale locale, Model model) {
+		HttpSession session = request.getSession(false);
+		if (session == null) {
+			return "home";
+		}
+		int userID = Integer.parseInt(request.getParameter("userID"));
+		List<Province> provinceList = addressDao.getAllProvinces();
+		User user = userDao.getUser(userID);
+		List<District> districtList = addressDao.getDistricts(user
+				.getDistrict().getProvince().getProvinceID());
+		model.addAttribute("provinceList", provinceList);
+		model.addAttribute("districtList", districtList);
+		model.addAttribute("user", user);
+		return "user/userChangePassword";
+	}
+	
+
 }

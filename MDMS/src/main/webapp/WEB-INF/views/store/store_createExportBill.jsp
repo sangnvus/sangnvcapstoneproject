@@ -18,23 +18,6 @@
 			subMenu.style.visibility = "hidden";
 		}
 	}
-	$(document)
-			.ready(
-					function() {
-						$('a')
-								.click(
-										function() {
-											var row = $('table#myTable tr:last')
-													.index() + 1;
-											$('#myTable')
-													.append(
-															"<tr><td>"
-																	+ row
-																	+ "</td><td><select><option value='1'>Vinamilk</option><option value='1'>fami</option></select></td>"
-																	+ "<td></td><td><input type='text' disabled='disabled' name='packagedType'></td><td><input type='text' name='quantity'></td>"
-																	+ "<td><input type='text' disabled='disabled' name='price'></td><td><input type='text' name='total'></td></tr>");
-										});
-					});
 	function autofill() {
 		/* var row = $('table#myTable tr:last').index();
 		$('#myTable')
@@ -55,22 +38,51 @@
 		var total = document.getElementsByName("total" + row);
 		total.item(0).value = product1.dataset["price"];
 	}
-	function Quantity(price, row) {
-		var text = document.getElementById("quantity" + row).value;
-		var a = parseInt(text) * parseFloat(price);
+	function Quantity(price, row, remaining) {
+		var quantity = document.getElementById("quantity" + row).value;
+		var a = parseInt(quantity) * parseFloat(price);
 		var total = document.getElementsByName("total" + row);
 		total.item(0).value = a + ".00";
+		document.getElementsByName("remaining" + row).item(0).value = parseInt(remaining)
+				- parseInt(quantity);
 	}
 	function onload() {
 		document.getElementById('createdDate').value = new Date().toISOString()
 				.substring(0, 10);
-		document.getElementById('requiredDate').value = new Date()
-				.toISOString().substring(0, 10);
+		document.getElementById('exportDate').value = new Date().toISOString()
+				.substring(0, 10);
+	}
+	$(document).ready(function() {
+
+		//iterate through each textboxes and add keyup
+		//handler to trigger sum event
+		$(".total").each(function() {
+
+			$(this).keyup(function() {
+				calculateSum();
+			});
+		});
+
+	});
+
+	function calculateSum() {
+
+		var sum = 0;
+		//iterate through each textboxes and add the values
+		$(".total").each(function() {
+			//add only if the value is number
+			if (!isNaN(this.value) && this.value.length != 0) {
+				sum += parseFloat(this.value);
+			}
+
+		});
+		//.toFixed() method will roundoff the final sum to 2 decimal places
+		$("#sum").html(sum.toFixed(2));
 	}
 </script>
 </head>
 <body onload="onload()">
-	<form action="saveOrder" method="post">
+	<form action="store_saveExportBill" method="post">
 		<div id="wrapper">
 			<div id="inner">
 				<div id="header">
@@ -78,61 +90,15 @@
 						<img src="resources/images/logo.gif" width="519" height="63"
 							alt="Milk Distributor Management System" />
 					</h1>
-					<div id="nav">
-						Xin chào <a href=""> <font color="Blue">Tung</font></a> | <a
-							href=""><font color="Blue">Đăng xuất</font></a>
-					</div>
+				<div id="nav" align="right">
+					<%@ include file="../header.jsp"%>
+				</div>
 					<!-- end nav -->
 				</div>
 				<!-- end header -->
-				<table width="600" align="center" cellspacing="0" id="menubar">
-					<tr>
-						<td><a href="Products.html" id="font">Sản phẩm</a></td>
-
-						<td onmouseover="ShowSub('subKhachhang', true);"
-							onmouseout="ShowSub('subKhachhang' ,false);"><a href="#"
-							id="font">Đại lý</a></td>
-
-						<td onmouseover="ShowSub('subDonhang', true);"
-							onmouseout="ShowSub('subDonhang' ,false);"><a href="#"
-							id="font">Đơn hàng</a></td>
-
-						<td><a href="#" id="font">&nbsp;</a></td>
-
-						<td><a href="#" id="font">&nbsp;</a></td>
-
-					</tr>
-					<tr>
-						<td></td>
-						<td onmouseover="ShowSub('subKhachhang', true);"
-							onmouseout="ShowSub('subKhachhang' ,false);">
-							<table id="subKhachhang" class="menu" cellpadding="0">
-								<tr>
-									<td><a href="Listdealer.html" id="font"> Danh sách đại
-											lý </a></td>
-								</tr>
-								<tr>
-									<td><a href="Createdealer.html" id="font"> Thêm đại lý
-									</a></td>
-								</tr>
-							</table>
-						</td>
-						<td onmouseover="ShowSub('subDonhang', true);"
-							onmouseout="ShowSub('subDonhang' ,false);">
-							<table id="subDonhang" class="menu" cellpadding="0">
-								<tr>
-									<td><a href="ListOrder.html" id="font"> Danh sách đơn
-											hàng </a></td>
-								</tr>
-								<tr>
-									<td><a href="CreateOrder.html" id="font"> Thêm đơn
-											hàng </a></td>
-								</tr>
-							</table>
-						</td>
-
-					</tr>
-				</table>
+				<div>
+				<%@ include file="store_menu.jsp" %> 
+			</div>
 				<div style="float: left">
 					<div>
 						<fieldset style="height: 1000px; width: 1070px;">
@@ -142,12 +108,16 @@
 							<table width="100%">
 								<td id="size">
 									<div style="margin-top: 10px">
-										Ngày tạo: <input disabled="disabled" type="date"
-											name="createdDate" id="createdDate">
+										Ngày tạo: <input style="margin-left: 19px;" type="date"
+											name="createdDate" id="createdDate" value="">
+									</div>
+									<div>
+										Ngày xuất: <input style="margin-left: 10px;" type="date"
+											name="exportDate" id="exportDate">
 									</div>
 									<div>Ngày yêu cầu giao hàng:
 										${order.getRequiredDate().toString().substring(0, 10)}</div>
-									<div>&nbsp;</div>
+
 
 									<div>Đại lý: ${order.getDealer().getDealerName()}</div>
 
@@ -164,10 +134,10 @@
 									<div>&nbsp;</div>
 									<div>&nbsp;</div>
 									<div>Giấy phép kinh doanh:
-										${order.getDealer().getBusinessLicenseCode()}</div>
-									<div>Địa chỉ : ${order.getDealer().getAddress()} -
-										${order.getDealer().getDistrict().getDistrictName()} -
-										${order.getDealer().getDistrict().getProvince().getProvinceName()}.</div>
+										${order.dealer.businessLicenseCode}</div>
+									<div>Địa chỉ : ${order.dealer.address} -
+										${order.dealer.district.districtName} -
+										${order.dealer.district.province.provinceName}.</div>
 								</td>
 							</table>
 
@@ -191,39 +161,42 @@
 										varStatus="status">
 										<tr>
 											<td>${status.count}</td>
-											<td><select name="productID${status.count}"
-												disabled="disabled" style="width: 100%">
-													<option value="${orderDetail.getProduct().getProductID()}">${orderDetail.getProduct().getProductName()}
+											<td><select name="productID${status.count}" style="width: 100%" disabled="disabled">
+													<option value="${orderDetail.product.productID}" selected="selected">${orderDetail.product.productName}
 													</option>
-											</select></td>
+											</select>
+											<input type="hidden" name="productID${status.count}" value="${orderDetail.product.productID}"></td>
 											<td>
 												<button>Tìm kiếm</button>
 											</td>
 											<td><input type="text" disabled="disabled"
 												name="packagedType${status.count}" id=""
-												value="${orderDetail.getProduct().getPackagedType()}"></td>
+												value="${orderDetail.product.packagedType}"></td>
 											<td><input type="text" name="quantity${status.count}"
-												id="quantity${status.count}"
-												value="${orderDetail.getQuantity()}"
-												onchange="Quantity(document.getElementById('price${status.count}').value,'${status.count}');"></td>
-											<td>(${orderDetail.getQuantity()})</td>
+												id="quantity${status.count}" value="${orderDetail.quantity-quantityOfExport[status.count-1]}"
+												onchange="Quantity(document.getElementById('price${status.count}').value,'${status.count}','${orderDetail.quantity-quantityOfExport[status.count-1]}');"></td>
+											<td><input type="text" name="remaining${status.count}"
+												size="6" disabled="disabled" id="remaining${status.count}"
+												value="${orderDetail.quantity-quantityOfExport[status.count-1]}"></td>
 											<td><input type="text" disabled="disabled"
 												name="price${status.count}" id="price${status.count}"
-												value="${orderDetail.getPrice()}"></td>
-											<td><input type="text" disabled="disabled"
+												value="${orderDetail.price}"></td>
+											<td><input type="text" disabled="disabled" class="total"
 												name="total${status.count}"
-												value="${orderDetail.getQuantity()*orderDetail.getPrice()}"></td>
+												value="${orderDetail.quantity*orderDetail.price}"></td>
 
 										</tr>
 									</c:forEach>
 								</table>
 							</div>
 							<div style="margin-right: 40px; margin-top: 10px" align="right">
-								Tổng Tiền : <input class="right" />
+								Triết khấu:<input size="3" type="text" name="discount" value="0">% 
+							</div>
+							<div style="margin-right: 40px; margin-top: 10px" align="right">
+								Tổng tiền hàng: <span id="sum">0</span>
 							</div>
 							<div style="margin-top: 15px; margin-right: 14px" align="left">
-								<td><button type="button" value="Goto"
-										onclick='window.location="#"'>Xuất</button>
+								<td><input type="submit" value="Xuất">
 									<button type="button" value="Goto"
 										onclick='window.history.back()'>Hủy bỏ</button>
 									<button type="button" value="Goto"
@@ -247,14 +220,10 @@
 
 		</div>
 		<!-- end inner -->
-		</div>
 		<!-- end wrapper -->
-		<input type="hidden" name="userID" value="3"> <input
-			type="hidden" name="row" value="1">
-		<%
-			Order order = (Order) request.getAttribute("order");
-			request.setAttribute("order", order);
-		%>
+		<input type="hidden" name="orderID" value="${order.getOrderID()}">
+		<input type="hidden" name="row" value="${orderDetailList.size()}">
+		<input type="hidden" name="dealerID" value="${order.dealer.dealerID}">
 	</form>
 </body>
 </html>

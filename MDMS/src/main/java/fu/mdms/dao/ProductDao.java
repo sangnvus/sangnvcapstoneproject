@@ -7,6 +7,8 @@ public interface ProductDao {
 	public void createProduct(Product product);
 
 	public void editProduct(Product product);
+	public void viewProduct(Product product);
+	
 
 	public void deleteProductr(int ProductID);
 

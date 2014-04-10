@@ -14,13 +14,13 @@
         <many-to-one name="dealer" class="fu.mdms.model.Dealer" fetch="join">
             <column name="DealerID" />
         </many-to-one>
-        <set name="orderDetail" table="orderdetails" inverse="false" lazy="true">
+        <set name="orderDetail" table="orderdetails" inverse="false" lazy="false">
             <key>
                 <column name="OrderID" />
             </key>
             <one-to-many class="fu.mdms.model.OrderDetail" />
         </set>
-        <set name="exportBill" table="exportbills" inverse="false" lazy="true">
+        <set name="exportBill" table="exportbills" inverse="false" lazy="false">
             <key>
                 <column name="OrderID" />
             </key>

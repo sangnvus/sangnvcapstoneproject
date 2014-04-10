@@ -20,19 +20,19 @@
         <property name="location" type="java.lang.String">
             <column name="Location" />
         </property>
-        <set name="supplier" table="suppliers" inverse="false" lazy="true">
+        <set name="supplier" table="suppliers" inverse="false" lazy="false">
             <key>
                 <column name="DistrictID" />
             </key>
             <one-to-many class="fu.mdms.model.Supplier" />
         </set>
-        <set name="dealer" table="dealers" inverse="false" lazy="true">
+        <set name="dealer" table="dealers" inverse="false" lazy="false">
             <key>
                 <column name="DistrictID" />
             </key>
             <one-to-many class="fu.mdms.model.Dealer" />
         </set>
-        <set name="user" table="users" inverse="false" lazy="true">
+        <set name="user" table="users" inverse="false" lazy="false">
             <key>
                 <column name="DistrictID" />
             </key>

@@ -67,9 +67,28 @@ public class OrderDaoImpl implements OrderDao {
 		session.close();
 		return orderList;
 	}
+	@SuppressWarnings("unchecked")
 	public List<Order> searchOrder(String dealerName, String orderStatus)
 	{
-		return null;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		List<Order> order = null;
+		if (orderStatus.equalsIgnoreCase("0")) {
+			if (dealerName.equalsIgnoreCase("")) {
+				order = (List<Order>) session.createQuery("FROM Order ")
+						.list();
+			} else {
+				order = (List<Order>) session.createQuery(
+						"FROM Order WHERE DealerID IN (SELECT dealerID FROM Dealer where dealerName LIKE '%"+dealerName+"%')").list();
+			}
+		} else {
+			order = (List<Order>) session.createQuery(
+					"FROM Order WHERE DealerID IN (SELECT dealerID FROM Dealer where dealerName LIKE '%"+dealerName+"%') AND status="+orderStatus+"").list();
+		}
+		session.getTransaction().commit();
+		session.close();
+		return order;
 	}
 
 	@Override

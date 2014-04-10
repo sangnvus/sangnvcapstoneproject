@@ -36,68 +36,15 @@
 					<img src="resources/images/logo.gif" width="519" height="63"
 						alt="Milk Distributor Management System" />
 				</h1>
-				<div id="nav">
-					Xin chào <a href=""> <font color="Blue">Tung</font></a> | <a
-						href=""><font color="Blue">Đăng xuất</font></a>
+				<div id="nav" align="right">
+					<%@ include file="../header.jsp"%>
 				</div>
 				<!-- end nav -->
 			</div>
 			<!-- end header -->
-			<table width="600" align="center" cellspacing="0" id="menubar">
-				<tr>
-
-					<td onmouseover="ShowSub('subSanpham', true);"
-						onmouseout="ShowSub('subSanpham' ,false);"><a
-						href="Products.html" id="font">Sản phẩm</a></td>
-
-					<td onmouseover="ShowSub('subDonhang', true);"
-						onmouseout="ShowSub('subDonhang' ,false);"><a href="#"
-						id="font">Đơn hàng</a></td>
-
-					<td onmouseover="ShowSub('subDaily', true);"
-						onmouseout="ShowSub('subDaily' ,false);"><a
-						href="ListDealer.html" id="font">Đại lý</a></td>
-
-					<td><a href="ListSupplier.html" id="font">Nhà cung cấp</a></td>
-
-					<td><a href="#" id="font">Báo cáo</a></td>
-
-				</tr>
-				<tr>
-					<td onmouseover="ShowSub('subSanpham', true);"
-						onmouseout="ShowSub('subSanpham' ,false);">
-						<table id="subSanpham" class="menu" cellpadding="0">
-							<tr>
-								<td><a href="CreateProduct.html" id="font"> Thêm sản
-										phẩm </a></td>
-
-							</tr>
-							<tr>
-								<td><a href="ListImportBill.html" id="font">Nhập hàng</a></td>
-							</tr>
-						</table>
-					</td>
-					<td onmouseover="ShowSub('subDonhang', true);"
-						onmouseout="ShowSub('subDonhang' ,false);">
-						<table id="subDonhang" class="menu" cellpadding="0">
-							<tr>
-								<td><a href="ListOrder.html" id="font"> Danh sách đơn
-										hàng </a></td>
-							</tr>
-						</table>
-					</td>
-					<td onmouseover="ShowSub('subDaily', true);"
-						onmouseout="ShowSub('subDaily' ,false);">
-						<table id="subDaily" class="menu" cellpadding="0">
-							<tr>
-								<td><a href="CreateDealer.html" id="font"> Thêm đại lý</a>
-								</td>
-							</tr>
-						</table>
-					</td>
-
-				</tr>
-			</table>
+			<div>
+				<%@ include file="store_menu.jsp" %> 
+			</div>
 			<div style="float: left">
 				<td>
 					<fieldset style="height: 600px; width: 1070px;">

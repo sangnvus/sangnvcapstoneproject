@@ -8,7 +8,7 @@
 			<column name="CategoryID" />
 			<generator class="assigned" />
 		</id>
-		<set name="product" table="Products" inverse="false" lazy="true">
+		<set name="product" table="Products" inverse="false" lazy="false">
 			<key>
 				<column name="CategoryID" />
 			</key>

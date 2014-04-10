@@ -11,7 +11,7 @@
         <property name="roleName" type="java.lang.String">
             <column name="RoleName" />
         </property>
-        <set name="user" table="users" inverse="false" lazy="true">
+        <set name="user" table="users" inverse="false" lazy="false">
             <key>
                 <column name="RoleID" />
             </key>

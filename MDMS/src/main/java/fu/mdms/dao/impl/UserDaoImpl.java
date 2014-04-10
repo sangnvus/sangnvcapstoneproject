@@ -14,7 +14,7 @@ import fu.mdms.util.HibernateUtil;
 
 public class UserDaoImpl implements UserDao {
 	@Override
-	public void addUser(User user) {
+	public void create(User user) {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
@@ -67,9 +67,14 @@ public class UserDaoImpl implements UserDao {
 
 		if (roleID == 0) {
 			if (status.equalsIgnoreCase("-1")) {
-				users = (List<User>) session.createQuery(
-						"FROM User WHERE FullName LIKE '%" + userName + "%' ")
-						.list();
+				if (userName.equalsIgnoreCase("")) {
+					users = (List<User>) session.createQuery("FROM User")
+							.list();
+				} else {
+					users = (List<User>) session.createQuery(
+							"FROM User WHERE FullName LIKE '%" + userName
+									+ "%' ").list();
+				}
 			} else {
 				users = (List<User>) session.createQuery(
 						"FROM User WHERE FullName LIKE '%" + userName
@@ -100,7 +105,8 @@ public class UserDaoImpl implements UserDao {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
-		List<User> users = (List<User>) session.createQuery("FROM User").list();
+		List<User> users = (List<User>) session.createQuery(
+				"FROM User where Deleted ='0'").list();
 		session.getTransaction().commit();
 		session.close();
 		return users;
@@ -112,8 +118,10 @@ public class UserDaoImpl implements UserDao {
 		System.out.println("login");
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
+		String delete = "0";
 		Query query = session.createQuery("from User where userName='"
-				+ userName + "' and password='" + password + "'");
+				+ userName + "' and password='" + password + "' and deleted ='"
+				+ delete + "'");
 		List<User> userList = query.list();
 
 		User user = new User();

@@ -11,7 +11,7 @@
         <many-to-one name="supplier" class="fu.mdms.model.Supplier" fetch="join">
             <column name="SupplierID" />
         </many-to-one>
-        <set name="importBillDetail" table="importbilldetails" inverse="false" lazy="true">
+        <set name="importBillDetail" table="importbilldetails" inverse="false" lazy="false">
             <key>
                 <column name="ImportBillID" />
             </key>
